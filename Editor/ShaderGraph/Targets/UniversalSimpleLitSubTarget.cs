@@ -190,6 +190,17 @@ namespace UnityEditor.Rendering.Universal.ShaderGraph
 #endif
                 collector.AddFloatProperty(Property.SrcBlend, 1.0f);    // always set by material inspector, ok to have incorrect values here
                 collector.AddFloatProperty(Property.DstBlend, 0.0f);    // always set by material inspector, ok to have incorrect values here
+                // Set alpha blend defaults based on surface type
+                collector.AddFloatProperty(Property.SrcBlendAlpha, 1.0f);    // One - used for both opaque and transparent
+                if (target.surfaceType == SurfaceType.Opaque)
+                {
+                    collector.AddFloatProperty(Property.DstBlendAlpha, 0.0f);    // Zero for opaque
+                }
+                else
+                {
+                    collector.AddFloatProperty(Property.DstBlendAlpha, 10.0f);   // OneMinusSrcAlpha for transparent (always set by material inspector)
+                }
+
                 collector.AddToggleProperty(Property.ZWrite, (target.surfaceType == SurfaceType.Opaque));
                 collector.AddFloatProperty(Property.ZWriteControl, (float)target.zWriteControl);
                 collector.AddFloatProperty(Property.ZTest, (float)target.zTestMode);    // ztest mode is designed to directly pass as ztest
@@ -872,7 +883,9 @@ namespace UnityEditor.Rendering.Universal.ShaderGraph
                 { CoreKeywordDescriptors.LightLayers },
                 { CoreKeywordDescriptors.DebugDisplay },
                 { CoreKeywordDescriptors.LightCookies },
-#if UNITY_2022_2_OR_NEWER
+#if UNITY_6000_1_OR_NEWER
+                { CoreKeywordDescriptors.ClusterLightLoop },
+#elif UNITY_2022_2_OR_NEWER
                 { CoreKeywordDescriptors.ForwardPlus },
 #else
                 { CoreKeywordDescriptors.ClusteredRendering },
@@ -919,9 +932,9 @@ namespace UnityEditor.Rendering.Universal.ShaderGraph
         {
             const string kShadows = "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl";
             const string kMetaInput = "Packages/com.unity.render-pipelines.universal/ShaderLibrary/MetaInput.hlsl";
-            const string kForwardPass = "Packages/com.zallist.universal-shadergraph-extensions/Editor/ShaderGraph/Includes/SimpleLitForwardPass.hlsl";
+            const string kForwardPass = "Packages/com.sunshine-kittens.universal-shadergraph-extensions/Editor/ShaderGraph/Includes/SimpleLitForwardPass.hlsl";
             const string kGBuffer = "Packages/com.unity.render-pipelines.universal/ShaderLibrary/UnityGBuffer.hlsl";
-            const string kSimpleLitGBufferPass = "Packages/com.zallist.universal-shadergraph-extensions/Editor/ShaderGraph/Includes/SimpleLitGBufferPass.hlsl";
+            const string kSimpleLitGBufferPass = "Packages/com.sunshine-kittens.universal-shadergraph-extensions/Editor/ShaderGraph/Includes/SimpleLitGBufferPass.hlsl";
             const string kLightingMetaPass = "Packages/com.unity.render-pipelines.universal/Editor/ShaderGraph/Includes/LightingMetaPass.hlsl";
             // TODO : Replace 2D for Simple one
             const string k2DPass = "Packages/com.unity.render-pipelines.universal/Editor/ShaderGraph/Includes/PBR2DPass.hlsl";
