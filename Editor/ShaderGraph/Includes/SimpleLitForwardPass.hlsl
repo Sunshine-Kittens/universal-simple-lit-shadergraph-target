@@ -162,10 +162,9 @@ half4 frag(PackedVaryings packedInput) : SV_TARGET
     outColor = color;
 
 #ifdef _WRITE_RENDERING_LAYERS
-    uint renderingLayers = GetMeshRenderingLayer();
-    outRenderingLayers = float4(EncodeMeshRenderingLayer(renderingLayers), 0, 0, 0);
+    outRenderingLayers = EncodeMeshRenderingLayer();
 #endif
-
+    
 #else
     return color;
 #endif //UNITY_VERSION 202220
