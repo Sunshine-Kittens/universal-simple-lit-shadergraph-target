@@ -72,7 +72,7 @@ void frag(
     PackedVaryings packedInput
     , out half4 outColor : SV_Target0
 #ifdef _WRITE_RENDERING_LAYERS
-    , out float4 outRenderingLayers : SV_Target1
+    , out uint outRenderingLayers : SV_Target1
 #endif
 )
 #else

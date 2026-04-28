@@ -66,7 +66,7 @@ PackedVaryings vert(Attributes input)
     return packedOutput;
 }
 
-FragmentOutput frag(PackedVaryings packedInput)
+GBufferFragOutput frag(PackedVaryings packedInput)
 {
     Varyings unpacked = UnpackVaryings(packedInput);
     UNITY_SETUP_INSTANCE_ID(unpacked);
@@ -150,5 +150,5 @@ FragmentOutput frag(PackedVaryings packedInput)
     half4 color = half4(inputData.bakedGI * surface.albedo + surface.emission, surface.alpha);
 
     //return BRDFDataToGbuffer(brdfData, inputData, surfaceDescription.Smoothness, surfaceDescription.Emission + color, surfaceDescription.Occlusion);
-    return SurfaceDataToGbuffer(surface, inputData, color.rgb, kLightingSimpleLit);
+    return PackGBuffersSurfaceData(surface, inputData, color.rgb);
 }
